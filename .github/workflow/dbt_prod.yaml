@@ -1,0 +1,36 @@
+name: Daily dbt production run
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  DBT_PROFILES_DIR: ./
+  DBT_SNOWFLAKE_ACCOUNT: ${{ secrets.DBT_SNOWFLAKE_ACCOUNT }}
+  DBT_SNOWFLAKE_PW: ${{ secrets.DBT_SNOWFLAKE_PW }}
+
+jobs:
+  dbt_run:
+    name: Scheduled dbt refresh and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+    - name: Check out
+        uses: actions/checkout@master
+
+    - uses: actions/setup-python@v1
+        with:
+        python-version: "3.9.x"
+
+    - name: Install dependencies
+        run: |
+        pip install dbt-snowflake
+        dbt deps
+
+    # dbt related commands here - run use --target prod/dev to run for specific environments
+    - name: Run dbt models
+        run: dbt run
+
+    - name: Test dbt models
+        run: dbt test
