@@ -1,0 +1,16 @@
+version: 2
+
+sources:
+  - name: pc_fivetran_db
+    database: pc_fivetran_db
+    schema: google_drive
+    tables:
+      - name: olist_customers_dataset
+      - name: olist_orders_dataset
+      - name: product_category_name_translation
+      - name: olist_sellers_dataset
+      - name: olist_order_items_dataset
+      - name: olist_order_reviews_dataset
+      - name: olist_geolocation_dataset
+      - name: olist_products_dataset
+      - name: olist_order_payments_dataset
