@@ -1,0 +1,31 @@
+dbt_hol:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      ######## Please replace with your Snowflake account name
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
+
+      user: dbt_user
+      ######## Please replace with your Snowflake dbt user password
+      password: "{{ env_var('DBT_SNOWFLAKE_PW') }}"
+
+      role: dbt_dev_role
+      database: dbt_hol_dev
+      warehouse: dbt_dev_wh
+      schema: public
+      threads: 200
+    prod:
+      type: snowflake
+      ######## Please replace with your Snowflake account name
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
+
+      user: dbt_user
+      ######## Please replace with your Snowflake dbt user password
+      password: "{{ env_var('DBT_SNOWFLAKE_PW') }}"
+
+      role: dbt_prod_rolee
+      database: dbt_hol_prod
+      warehouse: dbt_prod_wh
+      schema: public
+      threads: 200
