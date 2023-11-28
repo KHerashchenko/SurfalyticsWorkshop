@@ -2,7 +2,8 @@ name: Daily dbt production run
 
 on:
   push:
-    branches: [ main ]
+    branches:
+    - master
 
 env:
   DBT_PROFILES_DIR: ./
