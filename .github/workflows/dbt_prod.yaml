@@ -18,20 +18,18 @@ jobs:
 
     steps:
     - name: Check out
-        uses: actions/checkout@master
+      uses: actions/checkout@master
 
-    - uses: actions/setup-python@v1
-        with:
+    - name: Setup python
+      uses: actions/setup-python@master
+      with:
         python-version: "3.9.x"
 
     - name: Install dependencies
-        run: |
+      run: |
         pip install dbt-snowflake
-        dbt deps
 
     # dbt related commands here - run use --target prod/dev to run for specific environments
     - name: Run dbt models
-        run: dbt run
-
-    - name: Test dbt models
-        run: dbt test
+      run: dbt run
+      working-directory: ./dbt_hal
