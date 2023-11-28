@@ -32,4 +32,4 @@ jobs:
     # dbt related commands here - run use --target prod/dev to run for specific environments
     - name: Run dbt models
       run: dbt run
-      working-directory: ./dbt_hal
+      working-directory: ./dbt_hol
