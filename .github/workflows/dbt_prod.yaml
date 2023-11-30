@@ -1,4 +1,4 @@
-name: Daily dbt production run
+name: Triggered dbt dev and prod run
 
 on:
   push:
@@ -11,8 +11,8 @@ env:
   DBT_SNOWFLAKE_PW: ${{ secrets.DBT_SNOWFLAKE_PW }}
 
 jobs:
-  dbt_run:
-    name: Scheduled dbt refresh and test
+  dbt_run_dev:
+    name: dbt dev build
     runs-on: ubuntu-latest
     timeout-minutes: 90
 
@@ -29,9 +29,8 @@ jobs:
         run: |
           pip install dbt-snowflake
 
-      # dbt related commands here - run use --target prod/dev to run for specific environments
       - name: Run dbt models
-        run: dbt run
+        run: dbt build
         working-directory: ./dbt_hol
 
       - name: Upload dbt run artifacts
@@ -40,8 +39,9 @@ jobs:
           name: dbt-run-results
           path: ./dbt_hol/target
 
-  run_on_success:
-    needs: dbt_run
+  dbt_run_prod:
+    name: dbt prod build
+    needs: dbt_run_dev
     runs-on: ubuntu-latest
     if: success()
 
@@ -64,7 +64,6 @@ jobs:
           name: dbt-run-results
           path: ./dbt_hol/target
 
-      # Run dbt for --target prod
       - name: Run dbt models for prod
-        run: dbt run --target prod
+        run: dbt build --target prod
         working-directory: ./dbt_hol
