@@ -3,14 +3,24 @@ version: 2
 sources:
   - name: pc_fivetran_db
     database: pc_fivetran_db
-    schema: google_drive
+    schema: google_calendar_t
     tables:
-      - name: olist_customers_dataset
-      - name: olist_orders_dataset
-      - name: product_category_name_translation
-      - name: olist_sellers_dataset
-      - name: olist_order_items_dataset
-      - name: olist_order_reviews_dataset
-      - name: olist_geolocation_dataset
-      - name: olist_products_dataset
-      - name: olist_order_payments_dataset
+      - name: access_control_list
+      - name: allowed_conference_solution_type
+      - name: conference_data_entrypoint
+      - name: default_reminder
+      - name: recurrence
+      - name: calendar_list
+      - name: event
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+      - name: event_private_property
+      - name: attachment
+      - name: attendee
+      - name: reminder_override
+      - name: setting
+      - name: event_shared_property
+      - name: notification_setting

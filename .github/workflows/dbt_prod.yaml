@@ -3,7 +3,7 @@ name: Daily dbt production run
 on:
   push:
     branches:
-    - master
+      - master
 
 env:
   DBT_PROFILES_DIR: ./
@@ -17,19 +17,54 @@ jobs:
     timeout-minutes: 90
 
     steps:
-    - name: Check out
-      uses: actions/checkout@master
+      - name: Check out
+        uses: actions/checkout@v4
 
-    - name: Setup python
-      uses: actions/setup-python@master
-      with:
-        python-version: "3.9.x"
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9.x"
 
-    - name: Install dependencies
-      run: |
-        pip install dbt-snowflake
+      - name: Install dependencies
+        run: |
+          pip install dbt-snowflake
 
-    # dbt related commands here - run use --target prod/dev to run for specific environments
-    - name: Run dbt models
-      run: dbt run
-      working-directory: ./dbt_hol
+      # dbt related commands here - run use --target prod/dev to run for specific environments
+      - name: Run dbt models
+        run: dbt run
+        working-directory: ./dbt_hol
+
+      - name: Upload dbt run artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dbt-run-results
+          path: ./dbt_hol/target
+
+  run_on_success:
+    needs: dbt_run
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9.x"
+
+      - name: Install dependencies
+        run: |
+          pip install dbt-snowflake
+
+      - name: Download dbt run artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dbt-run-results
+          path: ./dbt_hol/target
+
+      # Run dbt for --target prod
+      - name: Run dbt models for prod
+        run: dbt run --target prod
+        working-directory: ./dbt_hol
